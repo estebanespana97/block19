@@ -3,24 +3,44 @@
 // We call this data "state" because it represents the state of our program.
 
 // TODO: Add support for more colors
-const colors = ["red", "green", "blue","orange","yellow","purple"];
-const sizes = ["small", "medium", "large"];
-const maxShapes = 10;
-const shapes = [
-  {
-    color: "red",
-    size: "small",
-  },
-  {
-    color: "yellow",
-    size: "small",
-  },
+
+const names = [
+  "Alice",
+  "Bob",
+  "Charlie",
+  "David",
+  "Emma",
+  "Fiona",
+  "George",
+  "Hannah",
+  "Isaac",
+  "Jack",
+  "Katherine",
+  "Liam",
+  "Mia",
+  "Noah",
+  "Olivia",
+  "Peter",
+  "Quinn",
+  "Rachel",
+  "Samuel",
+  "Tina"
 ];
+const priceRange = [10,20,30,40,50,60,70,80,90,100];
+
+
+const maxNames = 10;
+const nameList = [{
+  name: 'Steve',
+  price: 34,
+},
+];
+let totalCount = nameList[0].price;
 
 // `setInterval` will call `addShape` every 1000 milliseconds (1 second)
 // and return an interval ID that we can use to stop the interval later.
 // Calling `clearInterval(addShapeIntervalId)` will stop the interval.
-const addShapeIntervalId = setInterval(addShape, 1000);
+const addNameIntervalId = setInterval(addName, 1000);
 
 render(); // We call this function once to render the initial state
 
@@ -29,40 +49,67 @@ render(); // We call this function once to render the initial state
  * The term "render" is often used to describe this process.
  */
 function render() {
-  // Render the squares
-  const squares = document.querySelector("#squares");
-  const squareElements = shapes.map((shape) => {
+  // TODO: Render the cards
+  console.log(nameList);
+  const cards = document.querySelector("#cards");
+  const cardsElements = nameList.map((thisCard) => {
     const element = document.createElement("li");
-    element.classList.add(shape.color, shape.size);
+    element.setAttribute('class', 'card');
+    const nameElm = document.createElement('h2');
+    nameElm.innerText = thisCard.name;
+    const div = document.createElement('div');
+    div.setAttribute('class','cardItem');
+    div.append(nameElm);
+    element.append(div);
+    const div2 = document.createElement('div');
+    div2.setAttribute('class','cardItem');
+    element.append();
+    const priceElm = document.createElement('h3');
+    priceElm.innerText = thisCard.price;
+    element.append(priceElm);
     return element;
   });
-  squares.replaceChildren(...squareElements);
-
-  // TODO: Render the circles
-  const circles = document.querySelector("#circles");
-  const circlesElements = shapes.map((shape) => {
-    const element = document.createElement("li");
-    element.classList.add(shape.color, shape.size);
-    return element;
-  });
-  circles.replaceChildren(...circlesElements);
+  cards.replaceChildren(...cardsElements);
 }
 
 /**
  * Add a random shape to the `shapes` array
  */
-function addShape() {
-  const color = colors[Math.floor(Math.random() * colors.length)];
-  const size = sizes[Math.floor(Math.random() * sizes.length)]
+function addName() {
+  //randomizing values and stuff
+  const randName = names[Math.floor(Math.random() * names.length)];
+  const randPrice = priceRange[Math.floor(Math.random() * priceRange.length)];
 
-  // TODO: Randomize the size of the shape
+  //this is supposed to create the cards but it is creating shapes for some reason 
+  const div = document.createElement('div');
+  div.setAttribute('class', 'card');
+  const nameElm = document.createElement('h3');
+  nameElm.innerText = randName;
+  div.append(nameElm);
+  document.querySelector('ul').append(div);
+  
+  nameList.push({ name: randName, price: randPrice });
+  //setting the average price
+  totalCount += randPrice;
+  let newAverage = roundToDecimalPlace(totalCount / nameList.length,2);
+  let averageStartingPrice = document.getElementById('averageStartingPrice');
+  averageStartingPrice.innerText = 'The Average Starting Price is: $' + newAverage;
+  console.log(averageStartingPrice);
 
-  shapes.push({ color, size:size });
+
+  
+console.log(nameList);
+  
 
   render();
 
   // TODO: Stop adding shapes if we've reached the maximum number of shapes
-  if(shapes.length >= maxShapes){
-    clearInterval(addShapeIntervalId)
+  if(nameList.length >= maxNames){
+    clearInterval(addNameIntervalId)
   }
+}
+
+function roundToDecimalPlace(number, decimalPlaces){
+  let factor = Math.pow(10,decimalPlaces);
+  return Math.round(number * factor) / factor;
 }
